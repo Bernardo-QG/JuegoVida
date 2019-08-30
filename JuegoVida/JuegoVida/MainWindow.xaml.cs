@@ -22,7 +22,8 @@ namespace JuegoVida
 	public partial class MainWindow : Window
 	{
 		bool[,] _Universo, _UniversoAntiguo;
-		int _tamaño=15;
+		int _tamaño=10;
+		List<Grid> listaGrid = new List<Grid>();
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -30,8 +31,8 @@ namespace JuegoVida
 			_InicializandoAplicacion();
 			_InicializandoUniverso();
 
-			_Vida();
-		
+			
+			
 		}
 
 		private void _InicializandoAplicacion() {
@@ -47,9 +48,9 @@ namespace JuegoVida
 				DragMove();
 			};
 
-			gridPlay.MouseDown += (s, e) => { _Vida(); };
-			gridPause.MouseDown += (s, e) => { MessageBox.Show("Aun No jala");  };
-			gridRestart.MouseDown += (s, e) => { _InicializandoUniverso(); };
+			gridPlay.MouseDown += (s, e) => { _Vida(); _VerUniverso(); };
+			gridPause.MouseDown += (s, e) => {  };
+			gridRestart.MouseDown += (s, e) => {  };
 			gridClose.MouseDown += (s, e) => {	Application.Current.Shutdown();	};
 		}
 
@@ -69,9 +70,10 @@ namespace JuegoVida
 				for (int j = 0; j < _tamaño; j++)
 				{
 					_Universo[i, j] = true;
+
 					gridJuego.Children.Add(new _Celula(_idGrid, new Point(j, i),txtXY, _Universo[i,j]));
-				}
-				_idGrid++;
+					_idGrid++;
+				}			
 				
 			}
 
@@ -101,36 +103,43 @@ namespace JuegoVida
 						}
 					}
 
-					bool _auxU = _Universo[y, x];
+						
 		
 						if (poblacion == 2 || poblacion == 3)
-							_auxU = true;
+							_Universo[y, x] = true;
 						else
-							if(_auxU)
-								_auxU = false;
-
-
-
-				}				
+						_Universo[y, x] = false;
+					}				
 			}
 
 		}
 
-	
+		private void _VerUniverso() {
+
+			foreach (_Celula item in gridJuego.Children)
+			{
+				//MessageBox.Show(item.Name);
+				item._muerto =  _Universo[(int)item._cordenada.X,(int)item._cordenada.Y];
+				item._setCelula();
+			}
+
+		}
 
 	}
 
 	public class _Celula : Grid
 	{
-		Point _cordenada;
-		bool _muerto;
+		public Point _cordenada;
+		public bool _muerto;
 	
 		TextBlock _tb;
+
+	
 		public _Celula(int _idGrid, Point _cordenada,TextBlock _tb, bool _muerto) {
 			this._cordenada = _cordenada;
 			this._tb = _tb;
 			this._muerto = _muerto;
-			Name = "_" + _idGrid.ToString();
+			Name = "cell" + _idGrid.ToString();
 			Tag = _cordenada;
 			Background = Brushes.WhiteSmoke;
 			Grid.SetRow(this, (int)_cordenada.X);
@@ -140,16 +149,20 @@ namespace JuegoVida
 		private void _Eventos() {
 			MouseDown += (s, e) => {
 				
-				_tb.Text=_cordenada.X + ", " + _cordenada.Y+" => "+_Estado;
-				if (_muerto)
-				{
-					Background = Brushes.LightGreen; _muerto = false;
-				}
-				else
-				{
-					Background = Brushes.WhiteSmoke; _muerto = true;
-				}
+				_tb.Text=_cordenada.X + ", " + _cordenada.Y+" => "+_muerto+", n: "+Name;
+				_setCelula();
 			};
+		}
+
+		public void _setCelula() {
+			if (_muerto)
+			{
+				Background = Brushes.LightGreen; _muerto = false;
+			}
+			else
+			{
+				Background = Brushes.WhiteSmoke; _muerto = true;
+			}
 		}
 	}
 
