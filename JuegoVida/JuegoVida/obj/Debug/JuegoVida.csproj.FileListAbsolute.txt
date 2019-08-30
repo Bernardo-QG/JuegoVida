@@ -1,0 +1,15 @@
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\bin\Debug\JuegoVida.exe.config
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\bin\Debug\JuegoVida.exe
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\bin\Debug\JuegoVida.pdb
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\JuegoVida.csprojAssemblyReference.cache
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\MainWindow.g.cs
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\App.g.cs
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\JuegoVida_MarkupCompile.cache
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\JuegoVida_MarkupCompile.lref
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\MainWindow.baml
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\JuegoVida.g.resources
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\JuegoVida.Properties.Resources.resources
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\JuegoVida.csproj.GenerateResource.cache
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\JuegoVida.csproj.CoreCompileInputs.cache
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\JuegoVida.exe
+C:\Users\DESCO\Desktop\JuegoVida\JuegoVida\obj\Debug\JuegoVida.pdb

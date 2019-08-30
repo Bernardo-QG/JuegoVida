@@ -1,0 +1,19 @@
+﻿<Window x:Class="JuegoVida.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JuegoVida"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="500" WindowStartupLocation="CenterScreen" WindowStyle="None">
+    <Grid Background="#FF303030" Name="gridAlfa" >
+        <Grid x:Name="gridJuego" Margin="20" Background="WhiteSmoke" ShowGridLines="True"/>
+        <TextBlock x:Name="txtXY" Text="X, Y" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="WhiteSmoke" Margin="1" AutomationProperties.IsOffscreenBehavior="Onscreen"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10 0">
+            <Grid x:Name="gridPlay"  Width="20" Height="20" Background="Green" Margin="10 0"/>
+            <Grid x:Name="gridPause"  Width="20" Height="20" Background="Orange" Margin="10 0"/>
+            <Grid x:Name="gridRestart"  Width="20" Height="20" Background="Black" Margin="10 0"/>
+        </StackPanel>
+        <Grid x:Name="gridClose" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="20" Height="20" Background="Red"/>
+    </Grid>
+</Window>
