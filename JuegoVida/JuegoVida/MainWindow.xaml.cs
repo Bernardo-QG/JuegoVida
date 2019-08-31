@@ -22,7 +22,7 @@ namespace JuegoVida
 	public partial class MainWindow : Window
 	{
 		bool[,] _Universo, _UniversoAntiguo;
-		int _tamaño=10;
+		int _tamaño=25;
 		List<Grid> listaGrid = new List<Grid>();
 		public MainWindow()
 		{
@@ -30,9 +30,10 @@ namespace JuegoVida
 			
 			_InicializandoAplicacion();
 			_InicializandoUniverso();
+			_Ver();
 
-			
-			
+
+
 		}
 
 		private void _InicializandoAplicacion() {
@@ -48,7 +49,7 @@ namespace JuegoVida
 				DragMove();
 			};
 
-			gridPlay.MouseDown += (s, e) => { _Vida(); _VerUniverso(); };
+			gridPlay.MouseDown += (s, e) => { _setUniverso(); _Ver(); _Vida(); _Ver();  _VerUniverso();  _Ver(); };
 			gridPause.MouseDown += (s, e) => {  };
 			gridRestart.MouseDown += (s, e) => {  };
 			gridClose.MouseDown += (s, e) => {	Application.Current.Shutdown();	};
@@ -71,18 +72,22 @@ namespace JuegoVida
 				{
 					_Universo[i, j] = true;
 
-					gridJuego.Children.Add(new _Celula(_idGrid, new Point(j, i),txtXY, _Universo[i,j]));
+					gridJuego.Children.Add(new _Celula(_idGrid, new Point(j, i),txtXY, _Universo[i,j],this));
 					_idGrid++;
 				}			
 				
 			}
+			_UniversoAntiguo = (bool[,])_Universo.Clone();
 
 		}
 	
 		private void _Vida() {
+			Console.WriteLine("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 
-			
 			_UniversoAntiguo = (bool[,])_Universo.Clone();
+						
+			
+			
 
 			byte poblacion;
 			/* Universo */
@@ -96,21 +101,28 @@ namespace JuegoVida
 					{
 						for (int j = x-1; j < x+1; j++)
 						{
-							if ((i >= 0 & i < gridJuego.ActualHeight) & (j >= 0 & j < gridJuego.ActualWidth))
-								if (_UniversoAntiguo[i, j] == true)
+
+							//Console.ReadLine();
+							if ((i >= 0 & i < _tamaño) & (j >= 0 & j < _tamaño))
+							{
+								Console.WriteLine(" y" + y + " x" + x + " i" + i + " j" + j + " p" + poblacion + " u" + _UniversoAntiguo[i, j]);
+								if (!_UniversoAntiguo[i, j])
 									poblacion++;
+							}
 
 						}
 					}
 
-						
+					Console.Write(poblacion+" ");
 		
-						if (poblacion == 2 || poblacion == 3)
-							_Universo[y, x] = true;
+						if (poblacion >= 2 && poblacion <= 3)
+							_Universo[y, x] = false;
 						else
-						_Universo[y, x] = false;
-					}				
+							_Universo[y, x] = true;
+					}
+				Console.WriteLine();
 			}
+			Console.WriteLine("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 
 		}
 
@@ -125,6 +137,43 @@ namespace JuegoVida
 
 		}
 
+		private void _setUniverso() {
+
+			foreach (_Celula item in gridJuego.Children)
+			{
+				//MessageBox.Show(item.Name);
+				_Universo[(int)item._cordenada.X,(int)item._cordenada.Y] = item._muerto ;
+		
+			}
+
+		}
+
+		public void _Ver()
+		{
+			Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			for (int i = 0; i < _tamaño; i++)
+			{
+				for (int j = 0; j < _tamaño; j++)
+				{
+					Console.Write(_UniversoAntiguo[i, j]+" ");
+
+				}
+				Console.WriteLine();
+			}
+			Console.WriteLine(".................................");
+
+			for (int i = 0; i < _tamaño; i++)
+			{
+				for (int j = 0; j < _tamaño; j++)
+				{
+					Console.Write(_Universo[i, j] + " ");
+
+				}
+				Console.WriteLine();
+			}
+			Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		}
+
 	}
 
 	public class _Celula : Grid
@@ -133,11 +182,14 @@ namespace JuegoVida
 		public bool _muerto;
 	
 		TextBlock _tb;
+		MainWindow m;
 
-	
-		public _Celula(int _idGrid, Point _cordenada,TextBlock _tb, bool _muerto) {
+		bool[,] _Universo;
+		public _Celula(int _idGrid, Point _cordenada,TextBlock _tb, bool _muerto, MainWindow m) {
 			this._cordenada = _cordenada;
 			this._tb = _tb;
+		
+			this.m = m;
 			this._muerto = _muerto;
 			Name = "cell" + _idGrid.ToString();
 			Tag = _cordenada;
@@ -150,18 +202,28 @@ namespace JuegoVida
 			MouseDown += (s, e) => {
 				
 				_tb.Text=_cordenada.X + ", " + _cordenada.Y+" => "+_muerto+", n: "+Name;
-				_setCelula();
+				m._Ver();
+				if (_muerto)
+				{
+					Background = Brushes.LightGreen; _muerto = false;
+
+				}
+				else
+				{
+					Background = Brushes.WhiteSmoke; _muerto = true;
+				}
+				
 			};
 		}
 
 		public void _setCelula() {
-			if (_muerto)
+			if (!_muerto)
 			{
-				Background = Brushes.LightGreen; _muerto = false;
+				Background = Brushes.LightGreen;
 			}
 			else
 			{
-				Background = Brushes.WhiteSmoke; _muerto = true;
+				Background = Brushes.WhiteSmoke; 
 			}
 		}
 	}
