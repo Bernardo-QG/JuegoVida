@@ -22,7 +22,7 @@ namespace JuegoVida
 	public partial class MainWindow : Window
 	{
 		bool[,] _Universo, _UniversoAntiguo;
-		int _tamaño=25;
+		int _tamaño=30;
 		List<Grid> listaGrid = new List<Grid>();
 		public MainWindow()
 		{
@@ -82,7 +82,7 @@ namespace JuegoVida
 		}
 	
 		private void _Vida() {
-			Console.WriteLine("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			Console.WriteLine("$$$$$$$$$$$  Vida $$$$$$$$$$$$$");
 
 			_UniversoAntiguo = (bool[,])_Universo.Clone();
 						
@@ -96,16 +96,18 @@ namespace JuegoVida
 				for (int x = 0; x < _tamaño; x++)
 				{
 					poblacion = 0;
+					Console.WriteLine("Cordenada"+ x +", "+y);
 					/* Vecinos de una celula*/
-					for (int i = y-1; i < y+1; i++)
+					for (int i = y-1; i <= y+1; i++)
 					{
-						for (int j = x-1; j < x+1; j++)
+						for (int j = x-1; j <= x+1; j++)
 						{
 
 							//Console.ReadLine();
-							if ((i >= 0 & i < _tamaño) & (j >= 0 & j < _tamaño))
+							if ((i >= 0 && i < _tamaño) && (j >= 0 && j < _tamaño))
 							{
-								Console.WriteLine(" y" + y + " x" + x + " i" + i + " j" + j + " p" + poblacion + " u" + _UniversoAntiguo[i, j]);
+								Console.WriteLine(" i" + i + " j" + j + " p" + poblacion + " u" + _UniversoAntiguo[i, j]);
+								//Console.ReadLine();
 								if (!_UniversoAntiguo[i, j])
 									poblacion++;
 							}
@@ -113,9 +115,9 @@ namespace JuegoVida
 						}
 					}
 
-					Console.Write(poblacion+" ");
+					Console.WriteLine(" Poblacion "+poblacion+" ");
 		
-						if (poblacion >= 2 && poblacion <= 3)
+						if (poblacion == 2 || poblacion == 3)
 							_Universo[y, x] = false;
 						else
 							_Universo[y, x] = true;
@@ -150,7 +152,7 @@ namespace JuegoVida
 
 		public void _Ver()
 		{
-			Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			Console.WriteLine("%%%%%%%%%%%%     VER      %%%%%%%%%%%%%%%");
 			for (int i = 0; i < _tamaño; i++)
 			{
 				for (int j = 0; j < _tamaño; j++)
@@ -202,7 +204,7 @@ namespace JuegoVida
 			MouseDown += (s, e) => {
 				
 				_tb.Text=_cordenada.X + ", " + _cordenada.Y+" => "+_muerto+", n: "+Name;
-				m._Ver();
+				//m._Ver();
 				if (_muerto)
 				{
 					Background = Brushes.LightGreen; _muerto = false;
