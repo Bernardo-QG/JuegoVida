@@ -22,7 +22,7 @@ namespace JuegoVida
 	public partial class MainWindow : Window
 	{
 		bool[,] _Universo, _UniversoAntiguo;
-		int _tamaño=30;
+		int _tamaño = 15;
 		List<Grid> listaGrid = new List<Grid>();
 		public MainWindow()
 		{
@@ -96,7 +96,7 @@ namespace JuegoVida
 				for (int x = 0; x < _tamaño; x++)
 				{
 					poblacion = 0;
-					Console.WriteLine("Cordenada"+ x +", "+y);
+					//Console.WriteLine("Cordenada"+ x +", "+y);
 					/* Vecinos de una celula*/
 					for (int i = y-1; i <= y+1; i++)
 					{
@@ -106,7 +106,7 @@ namespace JuegoVida
 							//Console.ReadLine();
 							if ((i >= 0 && i < _tamaño) && (j >= 0 && j < _tamaño))
 							{
-								Console.WriteLine(" i" + i + " j" + j + " p" + poblacion + " u" + _UniversoAntiguo[i, j]);
+								//Console.WriteLine(" i" + i + " j" + j + " p" + poblacion + " u" + _UniversoAntiguo[i, j]);
 								//Console.ReadLine();
 								if (!_UniversoAntiguo[i, j])
 									poblacion++;
@@ -114,14 +114,23 @@ namespace JuegoVida
 
 						}
 					}
+					
 
-					Console.WriteLine(" Poblacion "+poblacion+" ");
-		
-						if (poblacion == 2 || poblacion == 3)
-							_Universo[y, x] = false;
-						else
+					//Console.WriteLine(" Poblacion "+poblacion+" ");
+					//Primera Regla
+					if (!_Universo[y, x])
+					{
+						poblacion--;
+						if ((poblacion < 2 || poblacion > 3))
 							_Universo[y, x] = true;
 					}
+					//Segunda Regla
+					else
+						if (poblacion == 3)
+							_Universo[y, x] = false;
+					_Ver();
+
+				}
 				Console.WriteLine();
 			}
 			Console.WriteLine("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
@@ -152,6 +161,7 @@ namespace JuegoVida
 
 		public void _Ver()
 		{
+			/*
 			Console.WriteLine("%%%%%%%%%%%%     VER      %%%%%%%%%%%%%%%");
 			for (int i = 0; i < _tamaño; i++)
 			{
@@ -174,6 +184,8 @@ namespace JuegoVida
 				Console.WriteLine();
 			}
 			Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		}
+		*/
 		}
 
 	}
