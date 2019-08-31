@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,7 +25,7 @@ namespace JuegoVida
 	public partial class MainWindow : Window
 	{
 		bool[,] _Universo, _UniversoAntiguo;
-		int _tamaño = 75;
+		int _tamaño = 20;
 		List<Grid> listaGrid = new List<Grid>();
 		DispatcherTimer Timer = new DispatcherTimer();
 		public MainWindow()
@@ -51,18 +53,47 @@ namespace JuegoVida
 				DragMove();
 			};
 
-			
 
-			Timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+
+			bwObj.DoWork += new DoWorkEventHandler(bwObj_DoWork);
+			bwObj.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+
+
+			Timer.Interval = new TimeSpan(0, 0, 0, 0, 200);
 			Timer.Tick += (s, a) =>
 			{
-				_setUniverso(); _Vida(); _VerUniverso();
+				_setUniverso();
+				if (bwObj.IsBusy != true)
+				{
+					bwObj.RunWorkerAsync();
+				}
+				
 			};
 
 			gridPlay.MouseDown += (s, e) => { Timer.Start(); };
 			gridPause.MouseDown += (s, e) => { Timer.Stop(); };
-			gridRestart.MouseDown += (s, e) => { _CleanUniverso(); _VerUniverso(); };
+			gridRestart.MouseDown += (s, e) => { _CleanUniverso(); _VerUniverso(); Timer.Stop(); };
 			gridClose.MouseDown += (s, e) => { Application.Current.Shutdown(); };
+		}
+
+
+		BackgroundWorker bwObj = new BackgroundWorker();
+		private void bwObj_DoWork(object sender, DoWorkEventArgs e)
+		{
+			
+			_Vida();
+		}
+		private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if (!(e.Error == null))
+				MessageBox.Show("Error: " + e.Error.Message);
+			else
+			{
+				_VerUniverso();
+
+			}
+
+
 		}
 
 		private void _InicializandoUniverso()
@@ -82,7 +113,7 @@ namespace JuegoVida
 				{
 					_Universo[i, j] = true;
 
-					gridJuego.Children.Add(new _Celula(_idGrid, new Point(j, i), txtXY, _Universo[i, j], this));
+					gridJuego.Children.Add(new _Celula(_idGrid, new Point(j, i),  _Universo[i, j]));
 					_idGrid++;
 				}
 
@@ -223,17 +254,12 @@ namespace JuegoVida
 		public Point _cordenada;
 		public bool _muerto;
 	
-		TextBlock _tb;
-		MainWindow m;
-
-		
-		public _Celula(int _idGrid, Point _cordenada,TextBlock _tb, bool _muerto, MainWindow m) {
+				
+		public _Celula(int _idGrid, Point _cordenada, bool _muerto) {
 			this._cordenada = _cordenada;
-			this._tb = _tb;
 		
-			this.m = m;
 			this._muerto = _muerto;
-			Name = "cell" + _idGrid.ToString();
+			Name = "c" + _idGrid.ToString();
 			Tag = _cordenada;
 			Background = Brushes.WhiteSmoke;
 			Grid.SetRow(this, (int)_cordenada.X);
@@ -243,7 +269,7 @@ namespace JuegoVida
 		private void _Eventos() {
 			MouseDown += (s, e) => {
 				
-				_tb.Text=_cordenada.X + ", " + _cordenada.Y+" => "+_muerto+", n: "+Name;
+				Console.WriteLine(_cordenada.X + ", " + _cordenada.Y+" => "+_muerto+",  "+Name);
 				//m._Ver();
 				if (_muerto)
 				{
