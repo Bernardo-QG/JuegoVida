@@ -12,26 +12,28 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace JuegoVida
 {
 	/// <summary>
 	/// Lógica de interacción para MainWindow.xaml
 	/// </summary>
-	
+
 	public partial class MainWindow : Window
 	{
 		bool[,] _Universo, _UniversoAntiguo;
-		int _tamaño = 15;
+		int _tamaño = 75;
 		List<Grid> listaGrid = new List<Grid>();
+		DispatcherTimer Timer = new DispatcherTimer();
 		public MainWindow()
 		{
 			InitializeComponent();
-			
+
 			_InicializandoAplicacion();
 			_InicializandoUniverso();
 			_Ver();
-
+			
 
 
 		}
@@ -43,21 +45,29 @@ namespace JuegoVida
 			{
 				Application.Current.MainWindow.Height = Application.Current.MainWindow.Width;
 			};
-			
+
 			gridAlfa.MouseDown += (s, e) =>
 			{
 				DragMove();
 			};
 
-			gridPlay.MouseDown += (s, e) => { _setUniverso(); _Ver(); _Vida(); _Ver();  _VerUniverso();  _Ver(); };
-			gridPause.MouseDown += (s, e) => {  };
-			gridRestart.MouseDown += (s, e) => {  };
-			gridClose.MouseDown += (s, e) => {	Application.Current.Shutdown();	};
+			
+
+			Timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+			Timer.Tick += (s, a) =>
+			{
+				_setUniverso(); _Vida(); _VerUniverso();
+			};
+
+			gridPlay.MouseDown += (s, e) => { Timer.Start(); };
+			gridPause.MouseDown += (s, e) => { Timer.Stop(); };
+			gridRestart.MouseDown += (s, e) => { _CleanUniverso(); _VerUniverso(); };
+			gridClose.MouseDown += (s, e) => { Application.Current.Shutdown(); };
 		}
 
 		private void _InicializandoUniverso()
 		{
-			int _idGrid=0;
+			int _idGrid = 0;
 			_Universo = new bool[_tamaño, _tamaño];
 			_UniversoAntiguo = new bool[_tamaño, _tamaño];
 			for (int i = 0; i < _tamaño; i++)
@@ -72,17 +82,18 @@ namespace JuegoVida
 				{
 					_Universo[i, j] = true;
 
-					gridJuego.Children.Add(new _Celula(_idGrid, new Point(j, i),txtXY, _Universo[i,j],this));
+					gridJuego.Children.Add(new _Celula(_idGrid, new Point(j, i), txtXY, _Universo[i, j], this));
 					_idGrid++;
-				}			
-				
+				}
+
 			}
 			_UniversoAntiguo = (bool[,])_Universo.Clone();
 
 		}
+
 	
 		private void _Vida() {
-			Console.WriteLine("$$$$$$$$$$$  Vida $$$$$$$$$$$$$");
+			//Console.WriteLine("$$$$$$$$$$$  Vida $$$$$$$$$$$$$");
 
 			_UniversoAntiguo = (bool[,])_Universo.Clone();
 						
@@ -131,9 +142,9 @@ namespace JuegoVida
 					_Ver();
 
 				}
-				Console.WriteLine();
+				//Console.WriteLine();
 			}
-			Console.WriteLine("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			//Console.WriteLine("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 
 		}
 
@@ -155,6 +166,23 @@ namespace JuegoVida
 				//MessageBox.Show(item.Name);
 				_Universo[(int)item._cordenada.X,(int)item._cordenada.Y] = item._muerto ;
 		
+			}
+
+		}
+
+		private void _CleanUniverso()
+		{
+
+			for (int i = 0; i < _tamaño; i++)
+			{
+				for (int j = 0; j < _tamaño; j++)
+				{
+
+
+					_Universo[i, j] = true;
+					
+
+				}
 			}
 
 		}
@@ -198,7 +226,7 @@ namespace JuegoVida
 		TextBlock _tb;
 		MainWindow m;
 
-		bool[,] _Universo;
+		
 		public _Celula(int _idGrid, Point _cordenada,TextBlock _tb, bool _muerto, MainWindow m) {
 			this._cordenada = _cordenada;
 			this._tb = _tb;
