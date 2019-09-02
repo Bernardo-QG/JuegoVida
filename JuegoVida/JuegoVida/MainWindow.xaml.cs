@@ -25,19 +25,15 @@ namespace JuegoVida
 	public partial class MainWindow : Window
 	{
 		bool[,] _Universo, _UniversoAntiguo;
-		int _tamaño = 20;
-		List<Grid> listaGrid = new List<Grid>();
+		int _tamaño = 50;
+	
 		DispatcherTimer Timer = new DispatcherTimer();
 		public MainWindow()
 		{
 			InitializeComponent();
-
 			_InicializandoAplicacion();
 			_InicializandoUniverso();
-			_Ver();
-			
-
-
+		
 		}
 
 		private void _InicializandoAplicacion() {
@@ -52,8 +48,7 @@ namespace JuegoVida
 			{
 				DragMove();
 			};
-
-
+			
 
 			bwObj.DoWork += new DoWorkEventHandler(bwObj_DoWork);
 			bwObj.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
@@ -62,7 +57,7 @@ namespace JuegoVida
 			Timer.Interval = new TimeSpan(0, 0, 0, 0, 200);
 			Timer.Tick += (s, a) =>
 			{
-				_setUniverso();
+				
 				if (bwObj.IsBusy != true)
 				{
 					bwObj.RunWorkerAsync();
@@ -70,7 +65,7 @@ namespace JuegoVida
 				
 			};
 
-			gridPlay.MouseDown += (s, e) => { Timer.Start(); };
+			gridPlay.MouseDown += (s, e) => { _setUniverso(); Timer.Start(); };
 			gridPause.MouseDown += (s, e) => { Timer.Stop(); };
 			gridRestart.MouseDown += (s, e) => { _CleanUniverso(); _VerUniverso(); Timer.Stop(); };
 			gridClose.MouseDown += (s, e) => { Application.Current.Shutdown(); };
@@ -80,7 +75,6 @@ namespace JuegoVida
 		BackgroundWorker bwObj = new BackgroundWorker();
 		private void bwObj_DoWork(object sender, DoWorkEventArgs e)
 		{
-			
 			_Vida();
 		}
 		private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -90,10 +84,7 @@ namespace JuegoVida
 			else
 			{
 				_VerUniverso();
-
 			}
-
-
 		}
 
 		private void _InicializandoUniverso()
@@ -113,7 +104,7 @@ namespace JuegoVida
 				{
 					_Universo[i, j] = true;
 
-					gridJuego.Children.Add(new _Celula(_idGrid, new Point(j, i),  _Universo[i, j]));
+					gridJuego.Children.Add(new _Celula(gridJuego.Children.Count, new Point(j, i),  _Universo[i, j]));
 					_idGrid++;
 				}
 
@@ -124,13 +115,9 @@ namespace JuegoVida
 
 	
 		private void _Vida() {
-			//Console.WriteLine("$$$$$$$$$$$  Vida $$$$$$$$$$$$$");
 
 			_UniversoAntiguo = (bool[,])_Universo.Clone();
-						
-			
-			
-
+								
 			byte poblacion;
 			/* Universo */
 			for (int y = 0; y < _tamaño; y++)
@@ -138,27 +125,20 @@ namespace JuegoVida
 				for (int x = 0; x < _tamaño; x++)
 				{
 					poblacion = 0;
-					//Console.WriteLine("Cordenada"+ x +", "+y);
 					/* Vecinos de una celula*/
 					for (int i = y-1; i <= y+1; i++)
 					{
 						for (int j = x-1; j <= x+1; j++)
 						{
-
-							//Console.ReadLine();
+							//Limites
 							if ((i >= 0 && i < _tamaño) && (j >= 0 && j < _tamaño))
-							{
-								//Console.WriteLine(" i" + i + " j" + j + " p" + poblacion + " u" + _UniversoAntiguo[i, j]);
-								//Console.ReadLine();
+							{								
 								if (!_UniversoAntiguo[i, j])
 									poblacion++;
 							}
-
 						}
 					}
-					
-
-					//Console.WriteLine(" Poblacion "+poblacion+" ");
+															
 					//Primera Regla
 					if (!_Universo[y, x])
 					{
@@ -170,33 +150,25 @@ namespace JuegoVida
 					else
 						if (poblacion == 3)
 							_Universo[y, x] = false;
-					_Ver();
-
 				}
-				//Console.WriteLine();
-			}
-			//Console.WriteLine("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-
+				
+			}			
 		}
 
 		private void _VerUniverso() {
 
 			foreach (_Celula item in gridJuego.Children)
 			{
-				//MessageBox.Show(item.Name);
 				item._muerto =  _Universo[(int)item._cordenada.X,(int)item._cordenada.Y];
 				item._setCelula();
 			}
-
 		}
 
 		private void _setUniverso() {
 
 			foreach (_Celula item in gridJuego.Children)
 			{
-				//MessageBox.Show(item.Name);
-				_Universo[(int)item._cordenada.X,(int)item._cordenada.Y] = item._muerto ;
-		
+					_Universo[(int)item._cordenada.X,(int)item._cordenada.Y] = item._muerto ;
 			}
 
 		}
@@ -205,59 +177,22 @@ namespace JuegoVida
 		{
 
 			for (int i = 0; i < _tamaño; i++)
-			{
 				for (int j = 0; j < _tamaño; j++)
-				{
-
-
 					_Universo[i, j] = true;
-					
-
-				}
-			}
 
 		}
-
-		public void _Ver()
-		{
-			/*
-			Console.WriteLine("%%%%%%%%%%%%     VER      %%%%%%%%%%%%%%%");
-			for (int i = 0; i < _tamaño; i++)
-			{
-				for (int j = 0; j < _tamaño; j++)
-				{
-					Console.Write(_UniversoAntiguo[i, j]+" ");
-
-				}
-				Console.WriteLine();
-			}
-			Console.WriteLine(".................................");
-
-			for (int i = 0; i < _tamaño; i++)
-			{
-				for (int j = 0; j < _tamaño; j++)
-				{
-					Console.Write(_Universo[i, j] + " ");
-
-				}
-				Console.WriteLine();
-			}
-			Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-		}
-		*/
-		}
+			
 
 	}
 
+	
 	public class _Celula : Grid
 	{
 		public Point _cordenada;
 		public bool _muerto;
-	
 				
 		public _Celula(int _idGrid, Point _cordenada, bool _muerto) {
-			this._cordenada = _cordenada;
-		
+			this._cordenada = _cordenada;		
 			this._muerto = _muerto;
 			Name = "c" + _idGrid.ToString();
 			Tag = _cordenada;
@@ -269,11 +204,10 @@ namespace JuegoVida
 		private void _Eventos() {
 			MouseDown += (s, e) => {
 				
-				Console.WriteLine(_cordenada.X + ", " + _cordenada.Y+" => "+_muerto+",  "+Name);
-				//m._Ver();
+				//Console.WriteLine(_cordenada.X + ", " + _cordenada.Y+" => "+_muerto+",  "+Name);
 				if (_muerto)
 				{
-					Background = Brushes.LightGreen; _muerto = false;
+					Background = new SolidColorBrush(Color.FromRgb(83, 0, 167)); _muerto = false;
 
 				}
 				else
@@ -285,14 +219,11 @@ namespace JuegoVida
 		}
 
 		public void _setCelula() {
-			if (!_muerto)
-			{
-				Background = Brushes.LightGreen;
-			}
+			if (!_muerto)			
+				Background = new SolidColorBrush(Color.FromRgb(83, 0, 167)); 
 			else
-			{
 				Background = Brushes.WhiteSmoke; 
-			}
+			
 		}
 	}
 

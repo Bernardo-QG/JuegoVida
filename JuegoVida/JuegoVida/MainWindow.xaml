@@ -6,15 +6,20 @@
         xmlns:local="clr-namespace:JuegoVida"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="500" WindowStartupLocation="CenterScreen" WindowStyle="None">
-    <Grid Background="#FF303030" Name="gridAlfa"  >
+    <Grid Background="#FF303030" >
+       
         <Grid x:Name="gridJuego" Margin="20" Background="WhiteSmoke" ShowGridLines="True"/>
         <TextBlock  Text="BQG" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="2" FontWeight="Bold" Foreground="WhiteSmoke"  AutomationProperties.IsOffscreenBehavior="Onscreen" FontSize="10"/>
-        <TextBlock  Text="Juego de la Vida" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="20 0" AutomationProperties.IsOffscreenBehavior="Onscreen"/>
+        
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10 0">
             <Grid x:Name="gridPlay"  Width="20" Height="20" Background="Green" Margin="10 0"/>
             <Grid x:Name="gridPause"  Width="20" Height="20" Background="Orange" Margin="10 0"/>
             <Grid x:Name="gridRestart"  Width="20" Height="20" Background="Black" Margin="10 0"/>
         </StackPanel>
         <Grid x:Name="gridClose" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="20" Height="20" Background="Red"/>
+        <Grid VerticalAlignment="Top" Height="20" Name="gridAlfa" Background="Black">
+            <TextBlock  Text="Juego de la Vida" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="20 0" AutomationProperties.IsOffscreenBehavior="Onscreen"/>    
+        </Grid>
     </Grid>
+    
 </Window>
